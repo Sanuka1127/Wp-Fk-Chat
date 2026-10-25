@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fake Chat Maker🇱🇰</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',sans-serif}
+body{margin:0;min-height:100vh;background:url('bg.jpg') center/cover no-repeat fixed #000;display:flex;flex-wrap:wrap;justify-content:center;gap:20px;padding:20px}
+#loader{position:fixed;inset:0;background:#000;z-index:9999;display:flex;flex-direction:column;justify-content:center;align-items:center;transition:opacity .8s}
+#loader-img{width:220px;height:220px;border-radius:50%;object-fit:cover;border:3px solid #4a6a8a;box-shadow:0 0 40px #4a6a8a66;animation:pulse 1.5s infinite}
+@keyframes pulse{0%,100%{transform:scale(.95)}50%{transform:scale(1.05)}}
+.bar-wrap{width:300px;height:8px;background:#1a2332;border-radius:20px;margin-top:30px;overflow:hidden;border:1px solid #4a6a8a44}
+.bar{height:100%;width:0%;background:linear-gradient(90deg,#4a6a8a,#a0b8d0);transition:width .15s}
+#percent{color:#a0b8d0;margin-top:15px;font-weight:bold;font-size:28px;letter-spacing:2px}
+#loadText{color:#5a6a7a;font-size:11px;margin-top:8px;letter-spacing:1px}
+body::before{content:'';position:fixed;inset:0;background:rgba(0,0,0,.25);z-index:-1}
+.controls{background:rgba(255,255,255,.93);backdrop-filter:blur(12px);border-radius:16px;padding:20px;width:360px;box-shadow:0 15px 50px rgba(0,0,0,.6)}
+.typing-title{font-size:22px;font-weight:800;min-height:32px;color:#111;border-right:3px solid #25D366;white-space:nowrap;overflow:hidden;display:inline-block;margin-bottom:12px}
+input,select,button{width:100%;padding:11px;margin:6px 0;border-radius:10px;border:1px solid #ddd}
+button{background:#25D366;color:#fff;font-weight:bold;border:none;cursor:pointer}
+#phone{width:360px;height:700px;background:#e5ddd5;border-radius:25px;overflow:hidden;box-shadow:0 15px 60px rgba(0,0,0,.8);border:3px solid rgba(255,255,255,.3)}
+.wa-header{background:#075E54;padding:12px;display:flex;gap:10px;color:#fff;align-items:center}
+.wa-chat{height:575px;overflow:auto;padding:10px;display:flex;flex-direction:column;gap:8px;background:url('https://user-images.githubusercontent.com/15075759/28719144-86dc0f70-73b1-11e7-911d-60d70fcded21.png')}
+.msg{max-width:75%;padding:8px 12px;border-radius:8px;font-size:14px}.me{align-self:flex-end;background:#dcf8c6}.other{align-self:flex-start;background:#fff}.time{font-size:10px;color:#667781;float:right;margin-left:8px;margin-top:4px}
+</style>
+</head>
+<body>
+<div id="loader">
+  <img id="loader-img" src="loading.jpg">
+  <div class="bar-wrap"><div class="bar" id="bar"></div></div>
+  <div id="percent">0%</div>
+  <div id="loadText">LOADING...</div>
+</div>
+<div class="controls">
+  <div class="typing-title" id="typeTitle"></div><br>
+  <input id="cName" placeholder="Name" value="Muichiro 🥺"><input id="cStatus" placeholder="Status" value="online">
+  <select id="cSide"><option value="other">Other Person</option><option value="me">Me</option></select>
+  <input id="cText" placeholder="Message"><input id="cTime" type="time" value="21:30">
+  <button onclick="addMsg()">+ Add Message</button>
+  <button onclick="clearChat()" style="background:#ff3333">Clear</button>
+  <button onclick="downloadImg()" style="background:#111">📸 Screenshot</button>
+</div>
+<div id="phone"><div class="wa-header"><span>‹</span><img src="https://i.pravatar.cc/100"><div><div id="pName">Muichiro 🥺</div><div id="pStatus" style="font-size:11px">online</div></div></div><div class="wa-chat" id="chat"></div></div>
+<script src="https://html2canvas.hertzen.at/dist/html2canvas.min.js"></script>
+<script>
+let p=0;const bar=document.getElementById('bar'),percent=document.getElementById('percent'),loadText=document.getElementById('loadText');
+const texts=["LOADING ASSETS...","SYNCING DATA...","PREPARING CHAT...","ALMOST READY..."];
+const interval=setInterval(()=>{
+  p+=Math.floor(Math.random()*10)+3;if(p>100)p=100;
+  bar.style.width=p+'%';percent.textContent=p+'%';loadText.textContent=texts[Math.floor(p/25)]||"READY!";
+  if(p>=100){clearInterval(interval);setTimeout(()=>{document.getElementById('loader').style.opacity='0';setTimeout(()=>{document.getElementById('loader').style.display='none';typeWriter();},800)},400)}
+},110);
+const title="Fake Chat Maker🇱🇰⭐";let i=0;
+function typeWriter(){if(i<title.length){document.getElementById('typeTitle').textContent+=title.charAt(i);i++;setTimeout(typeWriter,80)}else{document.getElementById('typeTitle').style.borderRight='none'}}
+const chat=document.getElementById('chat');
+function addMsg(){const t=cText.value;if(!t)return;const s=cSide.value,tm=cTime.value;const d=document.createElement('div');d.className='msg '+s;d.innerHTML=`${t} <span class=time>${tm} ${s=='me'?'✓✓':''}</span>`;chat.appendChild(d);cText.value='';chat.scrollTop=chat.scrollHeight}
+function clearChat(){chat.innerHTML=''}
+cName.addEventListener('input',e=>pName.textContent=e.target.value);cStatus.addEventListener('input',e=>pStatus.textContent=e.target.value);
+function downloadImg(){html2canvas(document.getElementById('phone')).then(c=>{let a=document.createElement('a');a.download='fakechat.png';a.href=c.toDataURL();a.click()})}
+</script>
+</body>
+</html>
